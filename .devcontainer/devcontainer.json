@@ -1,0 +1,6 @@
+{
+  "name": "Biblioteca",
+  "build": {
+    "dockerfile": "Dockerfile"
+  }
+}
