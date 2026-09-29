@@ -1,10 +1,10 @@
 <?php
 
-require_once("funciones.php");
+require_once("db.php");
 
 $localizacion = "catalogo";
 
-$libros = obtenerLibros();
+$libros = $bbdd->obtenerLibros();
 
 function escaparCatalogo(?string $valor): string
 {
@@ -78,7 +78,7 @@ require_once("cabecera.php");
 
     <?php foreach ($libros as $indice => $libro): ?>
       
-      <?php $disponible = comprobarDisponibilidadLibro($libro["id"]); ?>
+      <?php $disponible = $bbdd->comprobarDisponibilidadLibro($libro["id"]); ?>
 
       <article
         class="libro"

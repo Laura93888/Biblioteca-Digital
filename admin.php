@@ -1,7 +1,7 @@
 <?php
 
 $localizacion = "paneladmin";
-require_once("funciones.php");
+require_once("db.php");
 session_start();
 
 if (!isset($_SESSION["usuario_id"])) {
@@ -18,13 +18,13 @@ if (isset($_POST["id_prestamo"])) {
 
     $idPrestamo = (int) $_POST["id_prestamo"];
 
-    devolverPrestamo($idPrestamo);
+    $bbdd->devolverPrestamo($idPrestamo);
 
     header("Location: admin.php");
     exit;
 }
 
-$prestamos = obtenerPrestamosActivos();
+$prestamos = $bbdd->obtenerPrestamosActivos();
 $nombreUsuario = $_SESSION["usuario"];
 
 require_once("cabecera.php");

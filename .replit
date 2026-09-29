@@ -5,3 +5,18 @@ channel = "stable-25_05"
 
 [agent]
 expertMode = true
+
+[workflows]
+
+[[workflows.workflow]]
+name = "inicio"
+mode = "sequential"
+author = 65562387
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "php -S 0.0.0.0:5000 -t ."
+
+[[ports]]
+localPort = 5000
+externalPort = 80

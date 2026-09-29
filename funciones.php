@@ -1,5 +1,16 @@
 <?php
-require_once("db.php");
+class db
+{
+    public $pdo;
+
+    public function __construct($host, $port, $db, $user, $pass)
+    {
+        $this->pdo = new PDO(
+            "mysql:host=".$host.";port=".$port.";dbname=".$db.";charset=utf8",
+            $user,
+            $pass
+        );
+    }
 
 function catlibros($categoria, $libros)
 {
@@ -41,7 +52,6 @@ function cmpnombredesc($a, $b)
 
 function obtenerLibros(): array
 {
-    $pdo = obtenerConexion();
 
     $sql = "
         SELECT
@@ -57,7 +67,7 @@ function obtenerLibros(): array
         ORDER BY l.id ASC
     ";
 
-    $stmt = $pdo->query($sql);
+    $stmt = $this->pdo->prepare($sql);
 
     return $stmt->fetchAll();
 }
@@ -65,7 +75,6 @@ function obtenerLibros(): array
 
 function obtenerLibroPorId(int $id): ?array
 {
-    $pdo = obtenerConexion();
 
     $sql = "
         SELECT
@@ -82,7 +91,7 @@ function obtenerLibroPorId(int $id): ?array
         LIMIT 1
     ";
 
-    $stmt = $pdo->prepare($sql);
+        $stmt = $this->pdo->prepare($sql);
     $stmt->execute([':id' => $id]);
 
     $libro = $stmt->fetch();
@@ -92,14 +101,13 @@ function obtenerLibroPorId(int $id): ?array
 
 function crearUsuario($nombre, $email, $contraseñaHash)
 {
-    $pdo = obtenerConexion();
 
     $sql = "
         INSERT INTO usuarios (nombre, email, contrasena)
         VALUES (:nombre, :email, :contrasena)
     ";
 
-    $stmt = $pdo->prepare($sql);
+    $stmt = $this->pdo->prepare($sql);
 
     $stmt->execute([
         ":nombre" => $nombre,
@@ -110,8 +118,6 @@ function crearUsuario($nombre, $email, $contraseñaHash)
 
 function buscarusuario($email){ // Buscamos al usuario por email
             
-            $pdo = obtenerConexion();
-            
             $sql = "
                 SELECT id, nombre, email, contrasena, rol
                 FROM usuarios
@@ -119,7 +125,7 @@ function buscarusuario($email){ // Buscamos al usuario por email
                 LIMIT 1
             ";
 
-            $stmt = $pdo->prepare($sql);
+                                $stmt = $this->pdo->prepare($sql);
 
             $stmt->execute([
                 ":email" => $email
@@ -132,7 +138,6 @@ function buscarusuario($email){ // Buscamos al usuario por email
 
 function cargarprestamos($idusuario)
 {
-    $pdo = obtenerConexion();
 
     $sql = "
         SELECT
@@ -150,16 +155,14 @@ function cargarprestamos($idusuario)
         ORDER BY prestamos.fecha_prestamo DESC
     ";
 
-    $stmt = $pdo->prepare($sql);
+    $stmt = $this->pdo->prepare($sql);
     $stmt->execute([$idusuario]);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function comprobarusuario($email){
-     $pdo = obtenerConexion();
-
-
+   
             // Comprobar si ya existe un usuario
             $sql = "
                 SELECT id
@@ -168,7 +171,7 @@ function comprobarusuario($email){
                 LIMIT 1
             ";
 
-            $stmt = $pdo->prepare($sql);
+    $stmt = $this->pdo->prepare($sql);
 
             $stmt->execute([
                 ":email" => $email
@@ -177,13 +180,101 @@ function comprobarusuario($email){
            return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function emailExisteOtroUsuario(string $email, int $idUsuario): bool { $pdo = obtenerConexion(); $sql = " SELECT id FROM usuarios WHERE email = :email AND id != :id "; $stmt = $pdo->prepare($sql); $stmt->execute([ ":email" => $email, ":id" => $idUsuario ]); return $stmt->fetch() !== false; } function actualizarDatosUsuario( int $idUsuario, string $nombre, string $email ): bool { $pdo = obtenerConexion(); $sql = " UPDATE usuarios SET nombre = :nombre, email = :email WHERE id = :id "; $stmt = $pdo->prepare($sql); return $stmt->execute([ ":nombre" => $nombre, ":email" => $email, ":id" => $idUsuario ]); } function obtenerContrasenaUsuario(int $idUsuario): ?string { $pdo = obtenerConexion(); $sql = " SELECT contrasena FROM usuarios WHERE id = :id "; $stmt = $pdo->prepare($sql); $stmt->execute([ ":id" => $idUsuario ]); $usuario = $stmt->fetch(PDO::FETCH_ASSOC); if (!$usuario) { return null; } return $usuario["contrasena"]; } function actualizarContrasenaUsuario( int $idUsuario, string $nuevaContrasena ): bool { $pdo = obtenerConexion(); $nuevaContrasenaHash = password_hash( $nuevaContrasena, PASSWORD_DEFAULT ); $sql = " UPDATE usuarios SET contrasena = :contrasena WHERE id = :id "; $stmt = $pdo->prepare($sql); return $stmt->execute([ ":contrasena" => $nuevaContrasenaHash, ":id" => $idUsuario ]); }
+    function emailExisteOtroUsuario(string $email, int $idUsuario): bool
+    {
+        $sql = "
+            SELECT id
+            FROM usuarios
+            WHERE email = :email
+            AND id != :id
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            ":email" => $email,
+            ":id" => $idUsuario
+        ]);
+
+        return $stmt->fetch() !== false;
+    }
+
+
+    function actualizarDatosUsuario(
+        int $idUsuario,
+        string $nombre,
+        string $email
+    ): bool
+    {
+        $sql = "
+            UPDATE usuarios
+            SET nombre = :nombre,
+                email = :email
+            WHERE id = :id
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute([
+            ":nombre" => $nombre,
+            ":email" => $email,
+            ":id" => $idUsuario
+        ]);
+    }
+
+
+    function obtenerContrasenaUsuario(int $idUsuario): ?string
+    {
+        $sql = "
+            SELECT contrasena
+            FROM usuarios
+            WHERE id = :id
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute([
+            ":id" => $idUsuario
+        ]);
+
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$usuario) {
+            return null;
+        }
+
+        return $usuario["contrasena"];
+    }
+
+
+    function actualizarContrasenaUsuario(
+        int $idUsuario,
+        string $nuevaContrasena
+    ): bool
+    {
+        $nuevaContrasenaHash = password_hash(
+            $nuevaContrasena,
+            PASSWORD_DEFAULT
+        );
+
+        $sql = "
+            UPDATE usuarios
+            SET contrasena = :contrasena
+            WHERE id = :id
+        ";
+
+        $stmt = $this->pdo->prepare($sql);
+
+        return $stmt->execute([
+            ":contrasena" => $nuevaContrasenaHash,
+            ":id" => $idUsuario
+        ]);
+    }
 
 
 function comprobarDisponibilidadLibro($id_libro)
 {
-    $pdo = obtenerConexion();
-
+ 
     $sql = "
         SELECT COUNT(*)
         FROM prestamos
@@ -191,7 +282,7 @@ function comprobarDisponibilidadLibro($id_libro)
         AND estado = 'activo'
     ";
 
-    $stmt = $pdo->prepare($sql);
+    $stmt = $this->pdo->prepare($sql);
     $stmt->execute([
         ":id_libro" => $id_libro
     ]);
@@ -207,7 +298,6 @@ function comprobarDisponibilidadLibro($id_libro)
 
 function crearPrestamo(int $idUsuario, int $idLibro): bool
 {
-    $pdo = obtenerConexion();
 
     // Comprobamos que el libro siga disponible
     if (!comprobarDisponibilidadLibro($idLibro)) {
@@ -231,7 +321,7 @@ function crearPrestamo(int $idUsuario, int $idLibro): bool
         )
     ";
 
-    $stmt = $pdo->prepare($sql);
+    $stmt = $this->pdo->prepare($sql);
 
     return $stmt->execute([
         ":id_usuario" => $idUsuario,
@@ -241,7 +331,6 @@ function crearPrestamo(int $idUsuario, int $idLibro): bool
 
 function obtenerPrestamosActivos(): array
 {
-    $pdo = obtenerConexion();
 
     $sql = "
         SELECT
@@ -263,15 +352,14 @@ function obtenerPrestamosActivos(): array
         ORDER BY prestamos.fecha_prestamo DESC
     ";
 
-    $stmt = $pdo->query($sql);
+     $stmt = $this->pdo->query($sql);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 function devolverPrestamo(int $idPrestamo): bool
 {
-    $pdo = obtenerConexion();
-
+ 
     $sql = "
         UPDATE prestamos
         SET
@@ -281,11 +369,12 @@ function devolverPrestamo(int $idPrestamo): bool
         AND estado = 'activo'
     ";
 
-    $stmt = $pdo->prepare($sql);
+    $stmt = $this->pdo->prepare($sql);
 
     return $stmt->execute([
         ":id" => $idPrestamo
     ]);
+}
 }
 
 ?>
