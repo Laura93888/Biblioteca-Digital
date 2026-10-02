@@ -4,7 +4,7 @@ $localizacion = "perfil";
 
 session_start();
 
-require_once("funciones.php");
+require_once("db.php");
 
 
 // ------------------------------------
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         } else {
 
-            actualizarDatosUsuario(
+            $bbdd->actualizarDatosUsuario(
                 $idUsuario,
                 $nombre,
                 $email
@@ -110,7 +110,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         } else {
 
-            $contrasenaGuardada = obtenerContrasenaUsuario($idUsuario);
+            $contrasenaGuardada = $bbdd->obtenerContrasenaUsuario($idUsuario);
 
 
             if (
@@ -125,7 +125,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             } else {
 
-                actualizarContrasenaUsuario(
+                $bbdd->actualizarContrasenaUsuario(
                     $idUsuario,
                     $nuevaContrasena
                 );

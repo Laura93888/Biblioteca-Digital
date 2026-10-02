@@ -2,6 +2,7 @@ modules = ["php-8.2", "web", "nodejs-20"]
 
 [nix]
 channel = "stable-25_05"
+packages = ["mariadb"]
 
 [agent]
 expertMode = true
@@ -16,6 +17,11 @@ author = 65562387
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "php -S 0.0.0.0:5000 -t ."
+
+[[ports]]
+localPort = 3306
+externalPort = 3000
+exposeLocalhost = true
 
 [[ports]]
 localPort = 5000

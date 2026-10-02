@@ -7,12 +7,12 @@ if (!isset($_SESSION["usuario_id"]) || ($_SESSION["rol"] ?? "") !== "admin") {
     exit;
 }
 
-require_once("funciones.php");
+require_once("db.php");
 
 $idPrestamo = (int)($_POST["id_prestamo"] ?? 0);
 
 if ($idPrestamo > 0) {
-    devolverPrestamo($idPrestamo);
+    $bbdd->devolverPrestamo($idPrestamo);
 }
 
 header("Location: admin.php");

@@ -1,8 +1,11 @@
 <?php
 
-session_start();
 
-include_once("db.php");
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+include_once("funciones.php");
 
 $config = require __DIR__ . "/config.php";
 

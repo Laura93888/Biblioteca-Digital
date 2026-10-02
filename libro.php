@@ -1,6 +1,6 @@
 <?php
 
-require_once("funciones.php");
+require_once("db.php");
 
 $localizacion = "catalogo";
 require_once("cabecera.php");

@@ -2,7 +2,7 @@
 $localizacion="panelusuario";
 session_start();
 
-require_once("funciones.php");
+require_once("db.php");
 
 if (!isset($_SESSION["usuario_id"])) {
     header("Location: login.php");
@@ -13,7 +13,7 @@ if ($_SESSION["rol"]==="admin"){
     exit;
 }
 
-$prestamos = cargarprestamos($_SESSION["usuario_id"]);
+$prestamos = $bbdd->cargarprestamos($_SESSION["usuario_id"]);
 $reservaConfirmada = isset($_GET["reserva"]) && $_GET["reserva"] === "ok";
 // Datos del usuario
 $idUsuario = $_SESSION["usuario_id"];

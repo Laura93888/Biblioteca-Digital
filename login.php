@@ -1,8 +1,8 @@
 <?php
 
-session_start();
 
-require_once("funciones.php");
+
+require_once("db.php");
 
 // Si el usuario ya ha iniciado sesión,
 // no tiene sentido mostrarle el formulario de login.

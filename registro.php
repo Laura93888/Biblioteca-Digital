@@ -2,7 +2,7 @@
 
 session_start();
 
-require_once("funciones.php");
+require_once("db.php");
 
 // Si el usuario ya ha iniciado sesión,
 // no necesita registrarse otra vez.
@@ -117,7 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         try {
 
-           $usuarioExistente = comprobarusuario($email);
+           $usuarioExistente = $bbdd->comprobarusuario($email);
 
             if ($usuarioExistente) {
 
@@ -132,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 );
 
                 // Crear el usuario
-               crearUsuario($nombre, $email, $contraseñaHash);
+                $bbdd->crearUsuario($nombre, $email, $contraseñaHash);
 
                 $exito = "Cuenta creada correctamente.";
 

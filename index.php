@@ -1,8 +1,9 @@
 <?php
-require_once("funciones.php");
+require_once("db.php");
+
 
 $localizacion="indice";
-$libros = obtenerLibros();
+$libros =  $bbdd->obtenerLibros();
 
 require_once("cabecera.php");
 ?>
