@@ -12,6 +12,7 @@ $sesioniniciada = isset($_SESSION["usuario"]);
   <meta charset="UTF-8">
   <title>Bookify - Biblioteca digital</title>
   <link rel="stylesheet" href="clases.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
 

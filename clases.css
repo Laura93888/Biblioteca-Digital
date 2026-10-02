@@ -591,6 +591,15 @@ section {
     .categoria-contenido strong {
         font-size: 1.4rem;
     }
+
+    footer.footerppal {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    footer address {
+        text-align: left;
+    }
 }
 
 
@@ -3553,4 +3562,74 @@ body.modal-abierto {
         grid-template-columns: 1fr;
         gap: 15px;
     }
+}
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+footer.footerppal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 25px 20px;
+
+    padding: 40px 6% 25px;
+
+    color: var(--blanco);
+    background: var(--azul);
+
+    border-top: 4px solid var(--burdeos);
+}
+
+footer p {
+    margin: 0;
+
+    color: var(--azul-claro);
+}
+
+footer a {
+    color: var(--rosa);
+}
+
+footer strong {
+    display: block;
+    margin-bottom: 8px;
+
+    color: var(--beige);
+    font-family: "Palatino Linotype", Palatino, Georgia, serif;
+    font-size: 1.8rem;
+    font-style: italic;
+    font-weight: normal;
+}
+
+footer address {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+
+    font-style: normal;
+    text-align: left;
+}
+
+footer address p {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+footer address i {
+    color: var(--rosa);
+}
+
+footer small {
+    flex-basis: 100%;
+    padding-top: 18px;
+
+    color: rgba(247, 243, 234, 0.6);
+    border-top: 1px solid rgba(247, 243, 234, 0.22);
+
+    font-size: 0.8rem;
+    text-align: center;
 }
